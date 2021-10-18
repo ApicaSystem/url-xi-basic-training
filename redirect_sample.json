@@ -1,0 +1,21 @@
+{
+    "$schema": "https://files-apicasystem-com.s3-eu-west-1.amazonaws.com/schemas/url-xi-schema-v1-0.json",
+    "name": "Test Redirect in URL XI",
+    "description": "Simple Scenario for testing redirects . Use different base urls",
+    "baseURL": "http://www.mintox.com",
+  
+    "steps": [
+        {
+            "name": "Site Page",
+            "requests": [
+                {
+                    "name":"Home page",
+                    "config": {
+                        "url": "/"
+                    }
+                   
+                }
+            ]
+        }
+    ]
+}

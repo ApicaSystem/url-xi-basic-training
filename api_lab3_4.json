@@ -1,0 +1,93 @@
+{
+    "$schema": "https://files-apicasystem-com.s3-eu-west-1.amazonaws.com/schemas/url-xi-schema-v1-0.json",
+    "name": "ASM Rest API lab 4",
+    "description": "ASM rest API. Interator which updates the check",
+    "baseURL": "https://api-wpm2.apicasystem.com/v3/",
+    "variables": [
+        {
+            "key": "authTicket",
+            "type": "string",
+            "usage": "input",
+            "hideValue": true,
+            "value": "EC0210F5-71E1-4BAD-A8DD-5D14C5DC32BC"
+        },
+        {
+            "key": "tagName",
+            "type": "string",
+            "usage": "input",
+            "value": "Application",
+            "description": "The tag name for filtering"
+        },
+        {
+            "key": "tagValue",
+            "type": "string",
+            "usage": "input",
+            "value": "TicketMonster",
+            "description": "The tag value for filtering"
+        },
+        {
+            "key": "maxLaps",
+            "type": "number",
+            "usage": "input",
+            "value": -1,
+            "description": "Max laps to run the iterator. Use -1 for default"
+        }
+    ],
+
+    "steps": [
+        {
+            "name": "Get Checks",
+            "requests": [
+                {
+                    "name": "Get checks by tag",
+                    "config": {
+                        "url": "checks",
+                        "params": {
+                            "auth_ticket": "{{authTicket}}",
+                            "enabled": "true",
+                            "severity": "I",
+                            "include_tag": "{{tagName}}~{{tagValue}}"
+                        }
+                    },
+                    "extractors": [
+                        {
+                            "variable": "checks",
+                            "type": "jsonpath",
+                            "expression": "$[*]",
+                            "array": true
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Update checks",
+            "iterator": {
+                "value": "{{checks}}",
+                "varName": "check",
+                "maxLaps": "{{maxLaps}}"
+            },
+
+            "requests": [
+                {
+                    "name": "Update check - {{$lapIdx1}}",
+                    "config": {
+                        "url": "<set in before script>",
+                        "method": "put",
+                        "data": { },
+                        "params": {
+                            "auth_ticket": "{{authTicket}}"
+                        }
+                    },
+                    "scripts": [
+                        {
+                            "scope": "before",
+                            "name": "PrepareUpdate",
+                            "script": "prepareUpdate.js"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

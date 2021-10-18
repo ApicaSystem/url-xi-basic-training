@@ -1,0 +1,119 @@
+{
+    "$schema": "https://files-apicasystem-com.s3-eu-west-1.amazonaws.com/schemas/url-xi-schema-v1-0.json",
+    "name": "ASM Rest API lab 3",
+    "description": "ASM rest api lab. Get details of check with max response time of type",
+    "baseURL": "https://api-wpm2.apicasystem.com/v3/",
+    "variables": [
+        {
+            "key": "authTicket",
+            "type": "string",
+            "usage": "input",
+            "hideValue": true,
+            "value": "EC0210F5-71E1-4BAD-A8DD-5D14C5DC32BC"
+        },
+        {
+            "key": "checkTypeName",
+            "type": "string",
+            "usage": "input",
+            "value": "ZebraTester",
+            "description": "The check type name"
+        },
+        {
+            "key": "checkName",
+            "type": "string",
+            "usage": "inResponse",
+            "description": "The check name"
+        },
+        {
+            "key": "asmCheckLink",
+            "type": "url",
+            "usage": "inResponse",
+            "description": "Link to check details"
+        },
+        {
+            "key": "checkValue",
+            "type": "number",
+            "usage": "returnValue",
+            "description": "The check value"
+        },
+        {
+            "key": "resultMessage",
+            "type": "string",
+            "usage": "inResponse",
+            "description": "Result message"
+        }
+    ],
+
+    "steps": [
+        {
+            "name": "Get Checks",
+            "requests": [
+                {
+                    "name": "Max Check of Type",
+                    "config": {
+                        "url": "checks",
+                        "params": {
+                            "auth_ticket": "{{authTicket}}",
+                            "enabled": "true",
+                            "severity": "I"
+                        }
+                    },
+                    "extractors": [
+                        {
+                            "variable": "checkCount",
+                            "type": "jsonpath",
+                            "expression": "$[?(@.check_type_name=='{{checkTypeName}}')]",
+                            "array": true
+                        }
+                    ],
+                    "scripts": [
+                        {
+                            "name": "Get Max Check",
+                            "scope": "after",
+                            "script": [
+                                "var checks= uxs.getVar('checkCount')",
+                                "var maxChecks = checks.sort( (c1,c2) => {return c2.value - c1.value })",
+                                "var checkId= maxChecks[0].id",
+                                "uxs.setVar('checkId', checkId)"
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "Check details",
+                    "config": {
+                        "url": "checks/{{checkId}}",
+                        "params": {
+                            "auth_ticket": "{{authTicket}}"
+                        }
+                    },
+                    "extractors": [
+                        {
+                            "variable": "checkName",
+                            "type": "jsonpath",
+                            "expression": "$.name"
+                        },
+                        {
+                            "variable": "checkValue",
+                            "type": "jsonpath",
+                            "expression": "$.value"
+                        },
+                        {
+                            "variable": "resultMessage",
+                            "type": "jsonpath",
+                            "expression": "$.last_result_details.message"
+                        }
+                    ],
+                    "transformers": [
+                        {
+                            "target": "asmCheckLink",
+                            "type": "replace",
+                            "source": "https://wpm.apicasystem.com/Check/Details/{{checkId}}"
+                        
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

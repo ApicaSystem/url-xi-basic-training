@@ -1,0 +1,30 @@
+{
+    "$schema": "https://files-apicasystem-com.s3-eu-west-1.amazonaws.com/schemas/url-xi-schema-v1-0.json",
+    "name": "TM Chaining requests lab 2",
+    "description": "Return number of events TicketMonster. ",
+    "baseURL": "http://ticketmonsterdev.apicasystem.com/ticket-monster",
+    "variables": [
+      {"key": "eventCount","usage": "returnValue","type": "number","unit": "events"}
+      
+    ],
+  
+  
+    "steps": [
+        {
+            "name": "Event Counting",
+            "requests": [
+                {
+                    "name":"Count Events",
+                    "config": {
+                        "url": "/rest/events",
+                        "params": {"_":"{{$timestamp}}"}
+                    } ,
+                    "extractors": [
+                      {"variable": "eventCount","type": "jsonpath","expression": "$[*].id","notFoundError": true,"counter": true}
+                    ]
+                }
+                
+            ]
+        }
+    ]
+}

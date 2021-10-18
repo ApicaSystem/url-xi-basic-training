@@ -1,0 +1,40 @@
+{
+    "$schema": "https://files-apicasystem-com.s3-eu-west-1.amazonaws.com/schemas/url-xi-schema-v1-0.json",
+    "name": "TM Chaining requests lab 1",
+    "description": "Chaining requests in TicketMonster. ",
+    "baseURL": "http://ticketmonsterdev.apicasystem.com/ticket-monster",
+    "variables": [
+      {"key": "eventName","usage": "inResponse","type": "string"},
+      {"key": "mediaLink","usage": "inResponse","type": "url"}
+    ],
+  
+  
+    "steps": [
+        {
+            "name": "Events-Correlation",
+            "requests": [
+                {
+                    "name":"All events",
+                    "config": {
+                        "url": "/rest/events",
+                        "params": {"_":"{{$timestamp}}"}
+                    } ,
+                    "extractors": [
+                      {"variable": "eventId","type": "jsonpath","expression": "$[*].id","notFoundError": true}
+                    ]
+                },
+                {
+                  "name":"Event Details",
+                  "config": {
+                      "url": "/rest/events/{{eventId}}",
+                      "params": {"_":"{{$timestamp}}"}
+                  } ,
+                  "extractors": [
+                    {"variable": "eventName","type": "jsonpath","expression": "$.name"},
+                    {"variable": "mediaLink","type": "jsonpath","expression": "$.mediaItem.url"}
+                  ]
+              }
+            ]
+        }
+    ]
+}

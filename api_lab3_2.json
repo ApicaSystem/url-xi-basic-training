@@ -1,0 +1,41 @@
+{
+    "$schema": "https://files-apicasystem-com.s3-eu-west-1.amazonaws.com/schemas/url-xi-schema-v1-0.json",
+    "name": "ASM Rest API lab 1",
+    "description": "ASM rest api lab. Return number of instances for a specific check type",
+    "baseURL": "https://api-wpm2.apicasystem.com/v3/",
+    "variables": [
+      {"key": "authTicket","type": "string","usage": "input","hideValue": true,"value": "EC0210F5-71E1-4BAD-A8DD-5D14C5DC32BC"},
+      {"key": "checkTypeName","type": "string","usage": "input","value": "ZebraTester","description": "The check type name"},
+      {"key": "checkCount","type": "number","usage": "returnValue","value": 0,"description": "The number of checks of type","unit": "checks"}
+
+    ],
+
+    "steps": [
+        {
+            "name": "Get Checks",
+            "requests": [
+                {
+                    "name":"Count Checks of Type",
+                    "config": {
+                        "url": "checks",
+                        "params": {
+                          "auth_ticket":"{{authTicket}}",
+                          "enabled":"true",
+                          "severity":"I"
+                        }
+                    } ,
+                    "scripts": [
+                      {"name":"Count checks","scope":"after",
+                      "script": [
+                        "var checkType= uxs.getVar('checkTypeName')",
+                        "var checkCount =responseData.filter(check => check.check_type_name === checkType)",
+                        "uxs.setVar('checkCount',checkCount.length)"
+                      ] }
+                    ]
+                  
+                }
+                
+            ]
+        }
+    ]
+}
