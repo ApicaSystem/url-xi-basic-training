@@ -1,0 +1,58 @@
+{
+  "$schema": "file:///usr/local/lib/node_modules/@apica-io/url-xi/config/url-xi-schema-v1-0.json",
+  "name": "Test Client with ssl certificates",
+  "description": "The site is badssl.com",
+  "baseURL": "https://badssl.com",
+  "includes": [
+    {
+      "name": "key_pem",
+      "type": "certificate",
+      "scope": "project",
+      "src": "file.key.pem"
+    },
+    {
+      "name": "cert_pem",
+      "type": "certificate",
+      "scope": "project",
+      "src": "file.cert.pem"
+    }
+  ],
+  "steps": [
+    {
+      "name": "Bad SSL Client page",
+     
+      "httpsAgent": {
+        "rejectUnauthorized": true, 
+        "key": "{{$cert.key_pem}}",
+        "cert": "{{$cert.cert_pem}}"
+       
+      },
+      
+      "requests": [
+        {
+          "name":"Client Page",
+          "config":{
+            "url": "https://client.badssl.com"
+          },
+          "extractors": [
+            {
+              "type": "regexp",
+              "expression": "(Client-authenticated_TLS_handshake)",
+              "variable": "responseValidation"
+            }
+          ],
+          "assertions": [
+            {
+              "type": "javaScript",
+              "value": "{{responseValidation}}",
+              "description": "Html body must contain Client-authenticated",
+              "expression": "value.length >0 ",
+              "failStep": true,
+              "reportFailOnly": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -4,13 +4,7 @@
     "description": "ASM rest api lab. Get details of check with max response time of type",
     "baseURL": "https://api-wpm2.apicasystem.com/v3/",
     "variables": [
-        {
-            "key": "authTicket",
-            "type": "string",
-            "usage": "input",
-            "hideValue": true,
-            "value": "EC0210F5-71E1-4BAD-A8DD-5D14C5DC32BC"
-        },
+       
         {
             "key": "checkTypeName",
             "type": "string",
@@ -43,6 +37,9 @@
             "description": "Result message"
         }
     ],
+    "includes": [
+        {"name": "api-project","scope": "project", "type": "vars","src": "common_vars.json"}
+      ],
 
     "steps": [
         {
@@ -60,22 +57,20 @@
                     },
                     "extractors": [
                         {
-                            "variable": "checkCount",
+                            "variable": "checks",
                             "type": "jsonpath",
                             "expression": "$[?(@.check_type_name=='{{checkTypeName}}')]",
                             "array": true
                         }
                     ],
+                    "assertions": [
+                        {"description": "Number of return checks must greater than 0","type": "javaScript","value": "","expression": "{{checks}}.length > 0 ","reportFailOnly": false}
+                    ],
                     "scripts": [
                         {
                             "name": "Get Max Check",
                             "scope": "after",
-                            "script": [
-                                "var checks= uxs.getVar('checkCount')",
-                                "var maxChecks = checks.sort( (c1,c2) => {return c2.value - c1.value })",
-                                "var checkId= maxChecks[0].id",
-                                "uxs.setVar('checkId', checkId)"
-                            ]
+                            "script": "getMaxCheck.js"
                         }
                     ]
                 },
@@ -108,7 +103,7 @@
                         {
                             "target": "asmCheckLink",
                             "type": "replace",
-                            "source": "https://wpm.apicasystem.com/Check/Details/{{checkId}}"
+                            "source": "{{asmUrl}}/Check/Details/{{checkId}}"
                         
                         }
                     ]

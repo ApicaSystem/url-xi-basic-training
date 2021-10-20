@@ -1,0 +1,15 @@
+[
+    {
+        "key": "authTicket",
+        "type": "string",
+        "usage": "input",
+        "hideValue": true,
+        "value": "XXX-XXX"
+    },
+    {
+        "key": "asmUrl",
+        "type": "url",
+        "usage": "input",
+        "value": "https://wpm.apicasystem.com"
+    }
+]

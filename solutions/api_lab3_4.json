@@ -5,13 +5,6 @@
     "baseURL": "https://api-wpm2.apicasystem.com/v3/",
     "variables": [
         {
-            "key": "authTicket",
-            "type": "string",
-            "usage": "input",
-            "hideValue": true,
-            "value": "EC0210F5-71E1-4BAD-A8DD-5D14C5DC32BC"
-        },
-        {
             "key": "tagName",
             "type": "string",
             "usage": "input",
@@ -33,6 +26,9 @@
             "description": "Max laps to run the iterator. Use -1 for default"
         }
     ],
+    "includes": [
+        {"name": "api-project","scope": "project", "type": "vars","src": "common_vars.json"}
+      ],  
 
     "steps": [
         {

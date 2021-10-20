@@ -4,10 +4,12 @@
     "description": "ASM rest api lab. Return number of instances for a specific check type",
     "baseURL": "https://api-wpm2.apicasystem.com/v3/",
     "variables": [
-      {"key": "authTicket","type": "string","usage": "input","hideValue": true,"value": "EC0210F5-71E1-4BAD-A8DD-5D14C5DC32BC"},
       {"key": "checkTypeName","type": "string","usage": "input","value": "ZebraTester","description": "The check type name"},
       {"key": "checkCount","type": "number","usage": "returnValue","value": 0,"description": "The number of checks of type","unit": "checks"}
 
+    ],
+    "includes": [
+      {"name": "api-project","scope": "project", "type": "vars","src": "common_vars.json"}
     ],
 
     "steps": [

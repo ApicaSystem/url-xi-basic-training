@@ -7,7 +7,7 @@ if(target_sla < 99.5)
     target_sla = 99.5
 
 let apiName= check.check_type_api
-switch (check.check_type_ap) {
+switch (check.check_type_api) {
   case 'url v2':
     apiName='url-v2'
     break
