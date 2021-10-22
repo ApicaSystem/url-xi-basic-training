@@ -1,5 +1,5 @@
 {
-  "$schema": "file:///usr/local/lib/node_modules/@apica-io/url-xi/config/url-xi-schema-v1-0.json",
+  "$schema": "https://files-apicasystem-com.s3-eu-west-1.amazonaws.com/schemas/url-xi-schema-v1-0.json",
   "name": "Test Client with ssl certificates",
   "description": "The site is badssl.com",
   "baseURL": "https://badssl.com",
@@ -17,16 +17,16 @@
       "src": "file.cert.pem"
     }
   ],
+  "httpsAgent": {
+    "rejectUnauthorized": true, 
+    "key": "{{$cert.key_pem}}",
+    "cert": "{{$cert.cert_pem}}"
+   
+  },
   "steps": [
     {
       "name": "Bad SSL Client page",
      
-      "httpsAgent": {
-        "rejectUnauthorized": true, 
-        "key": "{{$cert.key_pem}}",
-        "cert": "{{$cert.cert_pem}}"
-       
-      },
       
       "requests": [
         {

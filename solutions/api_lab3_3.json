@@ -63,9 +63,7 @@
                             "array": true
                         }
                     ],
-                    "assertions": [
-                        {"description": "Number of return checks must greater than 0","type": "javaScript","value": "","expression": "{{checks}}.length > 0 ","reportFailOnly": false}
-                    ],
+                  
                     "scripts": [
                         {
                             "name": "Get Max Check",
